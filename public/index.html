@@ -40,6 +40,34 @@
       <div id="notes"></div>
     </div>
 
+<!--modal to add comments-->
+<div class="modal" id="comments" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" id="currentArticleTitle">
+
+
+            </div>
+
+            <div class="modal-body">
+                <div id="previousNote">
+                    <!--Where previous comment be display-->
+                </div>
+                <div class="form-group">
+                    <label for="exampleTextarea">Add a comment</label>
+                    <textarea class="form-control" id="userComment" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" id="saveNote" data_id= "">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="footer">
   <div class="container">
     <p>Self-Driving News Scraper</p>

@@ -16,7 +16,7 @@ $("#scrape-new").on("click", function () {
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + "<a href='" + data[i].link +"'>" + data[i].title + "</a>" + "<button id='commentButton' class='btn btn-info' data-toggle='modal' data-target='#comments' data_id='{{this._id}}''>Add Comment</button>"+"</h3>" );
       }
       console.log("Articles are scraped");
 
@@ -24,26 +24,98 @@ $("#scrape-new").on("click", function () {
 
 });
 
-$(".btn-info").on("click", function () {
+//add comment button is clicked get notes and display this article title.
+$(document).on("click", ".btn-info" ,function () {
     // Save the id from artcle picked
     var thisId = $(this).attr("data_id");
-    console.log("butgton click");
-    console.log(thisId);
+    //console.log("button click");
+    //console.log(thisId);
     // Empty the notes from the note section
     $("#previousNote").empty();
     $("#currentArticleTitle").empty();
+    
     // Now make an ajax call for the Artsicle
     $.ajax({
         method: "GET",
         url: "/articles/" + thisId
-        
+
     }).done(function (data) {
         console.log(data);
-    //get article title in model     
+        //get article title in model     
         $("#currentArticleTitle").append("<h4 class='modal-title'>" + data.title + "</h4>");
-        
-    //loop to dispaly the notes in the model    
-        for (var i = 1; i < data.comment.length; i++){ 
-    }   
+        //adding the id to the save note button
+        $("#saveNote").attr("data_id", data._id);
+        //display notes in the modals
+        displayNotes(data.note)
     });
 })
+
+
+//save users comments 
+$(document).on("click", "#saveNote", function () {
+    // Grab the id associated with the article from the submit button
+    var thisId = $(this).attr("data_id");
+    //console.log(thisId);
+    var userInput = $("#userComment").val();
+    // Run a POST request to change the note, using what's entered in the inputs
+    $.ajax({
+            method: "POST",
+            url: "/articles/" + thisId,
+            data: {
+                // Value taken from note textarea
+                body: userInput
+            }
+        })
+        // With that done
+        .done(function (data) {
+            // Log the response
+            console.log(data);
+            console.log(userInput);
+        });
+    //empting out comment box.
+    $("#userComment").val("");
+})
+
+//delete notes 
+$(document).on("click", "#notes", function () {
+    var thisId = $(this).attr("data-id");
+    //making sure thier is an id and click is working 
+    console.log(thisId);
+    $.ajax({
+        method: "POST",
+        url: "/delete/" + thisId
+
+    }).done(function (data) {
+        //this
+        console.log("note deleted");
+    })
+})
+
+//function to display notes in the modal
+function displayNotes(data){
+            console.log(data);
+    //loop to dispaly the notes in the model  
+        for (var i = 0; i < data.length; i++) {
+            console.log(data[i].body);
+            var $commentDiv = $('<div>');
+            var $noteBlock = $('<div class="card-block">');
+            var $noteText = $('<blockquote class="card-blockquote">');
+            var $previousComment = $('<p class="noteData">');
+
+            //comment div
+            $commentDiv.attr("id", "notes");
+            $commentDiv.addClass("card card-outline-danger");
+            $commentDiv.attr("data-dismiss", "modal")
+            $commentDiv.attr("data-id", data[i]._id);
+
+            //notes in database
+            $previousComment.text(data[i].body);
+
+            $noteText.append($previousComment);
+            $noteBlock.append($noteText);
+            $commentDiv.append($noteBlock);
+
+            $("#previousNote").prepend($commentDiv);
+
+        }
+}
