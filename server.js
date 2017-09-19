@@ -15,6 +15,13 @@ var cheerio = require("cheerio");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
+// Hook mongojs configuration to the database
+Article.on("error", function (error) {
+    console.log("Database Error:", error);
+});
+
+var port = process.env.PORT || 3000;
+
 
 // Initialize Express
 var app = express();
@@ -152,6 +159,6 @@ app.post("/articles/:id", function(req, res) {
 
 
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log("App running on port 3000!");
 });
