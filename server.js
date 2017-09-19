@@ -99,6 +99,7 @@ app.get("/articles", function(req, res) {
   });
 });
 
+
 // Grab an article by it's ObjectId
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
@@ -133,7 +134,7 @@ app.post("/articles/:id", function(req, res) {
     // Otherwise
     else {
       // Use the article id to find and update it's note
-      Article.findOneAndUpdate({ "_id": req.params.id }, { "note": doc._id })
+      Article.findOneAndUpdate({ "_id": req.params.id }, {$push: { "note": doc._id }}, {new: true})
       // Execute the above query
       .exec(function(err, doc) {
         // Log any errors
