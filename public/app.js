@@ -16,7 +16,7 @@ $("#scrape-new").on("click", function () {
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-        $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + "<a href='" + data[i].link +"'>" + data[i].title + "</a>" + "<button id='commentButton' class='btn btn-info' data-toggle='modal' data-target='#comments' data_id='{{this._id}}''>Add Comment</button>"+"</h3>" );
+        $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + "<a href='" + data[i].link +"'>" + data[i].title + "</a>" + "<button id='commentButton' class='btn btn-info' data-toggle='modal' data-target='#comments' data_id="+data[i]._id+">Add Comment</button>"+"</h3>" );
       }
       console.log("Articles are scraped");
 
@@ -55,15 +55,18 @@ $(document).on("click", ".btn-info" ,function () {
 $(document).on("click", "#saveNote", function () {
     // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data_id");
+    console.log("thisID:", thisId);
     //console.log(thisId);
     var userInput = $("#userComment").val();
+    var userTitle = $("userTitle").val();
     // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
             method: "POST",
             url: "/articles/" + thisId,
             data: {
                 // Value taken from note textarea
-                body: userInput
+                body: userInput,
+                title: userTitle
             }
         })
         // With that done

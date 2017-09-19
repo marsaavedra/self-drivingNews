@@ -36,9 +36,9 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 // Database configuration with mongoose
-//mongoose.connect("mongodb://localhost/self-drivingNews");
+mongoose.connect("mongodb://localhost/self-drivingNews");
 
-mongoose.connect('mongodb://heroku_6k92nh7k:nv9fdh6191i79hhiaer4fqpb6r@ds139904.mlab.com:39904/heroku_6k92nh7k');
+// mongoose.connect('mongodb://heroku_6k92nh7k:nv9fdh6191i79hhiaer4fqpb6r@ds139904.mlab.com:39904/heroku_6k92nh7k');
 var db = mongoose.connection;
 
 // Show any mongoose errors
@@ -133,6 +133,7 @@ app.get("/articles/:id", function(req, res) {
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   var newNote = new Note(req.body);
+  console.log("req.body:", req.body);
 
   // And save the new note the db
   newNote.save(function(error, doc) {
