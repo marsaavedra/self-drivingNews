@@ -16,7 +16,7 @@ $("#scrape-new").on("click", function () {
       // For each one
       for (var i = 0; i < data.length; i++) {
         // Display the apropos information on the page
-        $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + "<a href='" + data[i].link +"'>" + data[i].title + "</a>" + "<button id='commentButton' class='btn btn-info' data-toggle='modal' data-target='#comments' data_id="+data[i]._id+">Add Comment</button>"+"</h3>" );
+        $("#articles").append("<h3 data-id='" + data[i]._id + "'>" + "<a href='" + data[i].link +"'>" + data[i].title + "</a>" + "<button id='commentButton' class='btn btn-info' data-toggle='modal' data-target='#comments' data_notes="+data[i].note+">Add Comment</button>"+"</h3>" );
       }
       console.log("Articles are scraped");
 
@@ -31,8 +31,8 @@ $(document).on("click", ".btn-info" ,function () {
     //console.log("button click");
     //console.log(thisId);
     // Empty the notes from the note section
-    $("#previousNote").empty();
-    $("#currentArticleTitle").empty();
+    // $("#previousNote").empty();
+    // $("#currentArticleTitle").empty();
     
     // Now make an ajax call for the Artsicle
     $.ajax({
@@ -46,7 +46,8 @@ $(document).on("click", ".btn-info" ,function () {
         //adding the id to the save note button
         $("#saveNote").attr("data_id", data._id);
         //display notes in the modals
-        displayNotes(data.note)
+        // displayNotes(data.note)
+        console.log("dataNote", data.note);
     });
 })
 
@@ -74,6 +75,9 @@ $(document).on("click", "#saveNote", function () {
             // Log the response
             console.log(data);
             console.log(userInput);
+            for(var i = 0; i <data.length; i++) {
+            $("#previousNote").append(data[i].body);
+        }
         });
     //empting out comment box.
     $("#userComment").val("");
@@ -122,3 +126,4 @@ function displayNotes(data){
 
         }
 }
+
